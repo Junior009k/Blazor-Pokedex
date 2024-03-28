@@ -1,5 +1,5 @@
 ﻿@using BlazorApp1.Components.Pokemon.API.Config;
-
+@rendermode InteractiveServer
 
 @if (api.pokemones.Length<1)
 {
@@ -9,29 +9,56 @@ else
 {
     <h3>Pokemones</h3>
     //@api.pokemones
-    foreach (resultModel results in @api.getObject().Results)
+    foreach (resultModel results in @pokemones.Results)
     {
        {img=$"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{i}.png";}
         <ul>
             <li>
                 <img src=@img />
-                    <span>@results.Name</span>
-                  </li>
+                <span>@results.Name</span>
+             </li>
         </ul>
         ++i;
     }
+    if (pages != 1)
+    {
+        <button class="btn btn-primary" @onclick="Previous">Previo</button>
+    }
+    <span class="h2">@pages</span>
+    <button class="btn btn-primary" @onclick="Next">Proximo</button>
 
 }
 
 
 @code {
     private string cargando ="loading...";
-    public string img { get; set; }
+    private string img { get; set; }
     private int i = 1;
+    private  pokemonModel pokemones;
+    private int pages=1;
+    private int saltos=5;
     Api api = new Api();
     protected override async Task OnInitializedAsync()
     {
-        await api.Inicializar();
+        await api.Inicializar("https://pokeapi.co/api/v2/pokemon/?offset=&limit=5");
+        pokemones = api.getObject();
+    }
+
+    private async Task Previous()
+    {
+        i = ((pages - 3) * saltos) + 1;
+        --pages;
+        await api.Previous($"https://pokeapi.co/api/v2/pokemon/?offset={(pages-1) * saltos}&limit=5");
+        pokemones = api.getObject();
+    }
+    private async Task Next()
+    {
+        Console.WriteLine("3");
+        
+        i = ((pages+1) * saltos) + 1;
+        ++pages;
+        await api.Previous($"https://pokeapi.co/api/v2/pokemon/?offset={(pages + 1) * 5}&limit=5");
+        pokemones = api.getObject();
     }
 
 }

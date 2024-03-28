@@ -36,31 +36,53 @@ namespace BlazorApp1.Components.Pokemon.API.Config
     public class Api
     {
         static HttpClient client = new HttpClient();
-        private string pokemonURL = "https://pokeapi.co/api/v2/pokemon/";
         public string pokemones = "";
         public Api() 
         {
-        
-        }
-
-        public async Task<string> Inicializar()
-        {
-            Console.WriteLine($"hola {pokemones}");
             if (client.BaseAddress == null)
             {
-                client.BaseAddress = new Uri($"{pokemonURL}");
+                //client.BaseAddress = new Uri("https://pokeapi.co/api/v2/pokemon/");
             }
-            
+
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage response = await client.GetAsync(pokemonURL);
+        }
 
+        public async Task<string> Inicializar(string pokemonURL)
+        {
+           
+            HttpResponseMessage response = await client.GetAsync(pokemonURL);
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("la solicitud se hizo correctamente");
                 pokemones = await response.Content.ReadAsStringAsync();
             }
+            return pokemones;
+        }
+
+        public async Task<string> Next(string pokemonURL)
+        {
+            Console.WriteLine(pokemonURL);
+            HttpResponseMessage response = await client.GetAsync(pokemonURL);
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("la solicitud se hizo correctamente");
+                pokemones = await response.Content.ReadAsStringAsync();
+            }
+            return pokemones;
+        }
+
+        public async Task<string> Previous(string pokemonURL)
+        {
+            Console.WriteLine(pokemonURL);
+            HttpResponseMessage response = await client.GetAsync(pokemonURL);
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("la solicitud se hizo correctamente");
+                pokemones = await response.Content.ReadAsStringAsync();
+            }
+
             return pokemones;
         }
 
