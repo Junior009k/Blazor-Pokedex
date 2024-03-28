@@ -3,7 +3,7 @@
 
 @if (api.pokemones.Length<1)
 {
-    @cargando
+        <h1> loading... </h1>
 }
 else
 {
@@ -31,7 +31,6 @@ else
 
 
 @code {
-    private string cargando ="loading...";
     private string img { get; set; }
     private int i = 1;
     private  pokemonModel pokemones;
